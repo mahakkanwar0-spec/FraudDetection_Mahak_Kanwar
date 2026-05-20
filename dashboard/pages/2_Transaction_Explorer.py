@@ -1,12 +1,31 @@
 import streamlit as st
 import pandas as pd
+from pathlib import Path
 
-# Load data
-df = pd.read_csv("processed_data.csv")
+# =========================
+# PATH SETUP
+# =========================
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# =========================
+# LOAD DATA
+# =========================
+
+df = pd.read_csv(
+    BASE_DIR / "processed_data.csv"
+)
+
+# =========================
+# TITLE
+# =========================
 
 st.title("🔍 Transaction Explorer")
 
-# Sidebar Filters
+# =========================
+# SIDEBAR FILTERS
+# =========================
+
 risk_filter = st.sidebar.multiselect(
     "Select Risk Tier",
     options=df['RiskTier'].unique(),
@@ -17,7 +36,10 @@ filtered_df = df[
     df['RiskTier'].isin(risk_filter)
 ]
 
-# Show limited rows only
+# =========================
+# SHOW DATA
+# =========================
+
 st.subheader("Filtered Transactions")
 
 st.dataframe(
@@ -28,7 +50,10 @@ st.info(
     "Showing first 500 rows to improve dashboard performance."
 )
 
-# Search by TransactionID
+# =========================
+# SEARCH TRANSACTION
+# =========================
+
 st.subheader("Search Transaction")
 
 transaction_id = st.number_input(

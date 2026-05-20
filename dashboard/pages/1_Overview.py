@@ -1,20 +1,38 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from pathlib import Path
 
-# Page Config
+# =========================
+# PAGE CONFIG
+# =========================
+
 st.set_page_config(
     page_title="Fraud Detection Overview",
     layout="wide"
 )
 
-# Cached Loading
+# =========================
+# PATH SETUP
+# =========================
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# =========================
+# LOAD DATA
+# =========================
+
 @st.cache_data
 def load_data():
-    return pd.read_csv("processed_data.csv")
+    return pd.read_csv(
+        BASE_DIR / "processed_data.csv"
+    )
 
-# Load data
 df = load_data()
+
+# =========================
+# TITLE
+# =========================
 
 st.title("📊 Fraud Detection Overview")
 
@@ -40,7 +58,9 @@ filtered_df = df[
 
 total_transactions = len(filtered_df)
 
-fraud_count = filtered_df['ActualFraud'].sum()
+fraud_count = filtered_df[
+    'ActualFraud'
+].sum()
 
 detection_rate = (
     fraud_count / total_transactions
@@ -50,7 +70,10 @@ avg_fraud_amt = filtered_df[
     filtered_df['ActualFraud'] == 1
 ]['TransactionAmt'].mean()
 
-# Display metrics
+# =========================
+# DISPLAY METRICS
+# =========================
+
 col1, col2, col3, col4 = st.columns(4)
 
 col1.metric(
@@ -74,7 +97,7 @@ col4.metric(
 )
 
 # =========================
-# RISK TIER DONUT CHART
+# RISK TIER CHART
 # =========================
 
 st.subheader("Risk Tier Distribution")
@@ -96,7 +119,7 @@ st.plotly_chart(
 )
 
 # =========================
-# FRAUD PROBABILITY CHART
+# FRAUD PROBABILITY
 # =========================
 
 st.subheader("Fraud Probability Distribution")
@@ -114,12 +137,14 @@ st.plotly_chart(
 )
 
 # =========================
-# HOUR OF DAY ANALYSIS
+# HOUR ANALYSIS
 # =========================
 
 if 'HourOfDayOriginal' in filtered_df.columns:
 
-    st.subheader("Fraud Pattern by Hour")
+    st.subheader(
+        "Fraud Pattern by Hour"
+    )
 
     fig3 = px.histogram(
         filtered_df,
@@ -135,10 +160,12 @@ if 'HourOfDayOriginal' in filtered_df.columns:
     )
 
 # =========================
-# TOP RISK TRANSACTIONS
+# TOP TRANSACTIONS
 # =========================
 
-st.subheader("Top High-Risk Transactions")
+st.subheader(
+    "Top High-Risk Transactions"
+)
 
 top_risk = filtered_df.sort_values(
     by='FraudProbability',

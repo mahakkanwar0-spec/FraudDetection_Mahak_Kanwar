@@ -1,16 +1,36 @@
 import streamlit as st
 import pandas as pd
 import joblib
+from pathlib import Path
 
-# Load data
-df = pd.read_csv("processed_data.csv")
+# =========================
+# PATH SETUP
+# =========================
 
-# Load model
-model = joblib.load("model.pkl")
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# =========================
+# LOAD DATA & MODEL
+# =========================
+
+df = pd.read_csv(
+    BASE_DIR / "processed_data.csv"
+)
+
+model = joblib.load(
+    BASE_DIR / "model.pkl"
+)
+
+# =========================
+# TITLE
+# =========================
 
 st.title("🧠 SHAP Fraud Explainer")
 
-# User enters TransactionID
+# =========================
+# TRANSACTION INPUT
+# =========================
+
 transaction_id = st.number_input(
     "Enter TransactionID",
     min_value=int(df['TransactionID'].min()),
@@ -18,7 +38,10 @@ transaction_id = st.number_input(
     step=1
 )
 
-# Find transaction
+# =========================
+# FIND TRANSACTION
+# =========================
+
 transaction = df[
     df['TransactionID'] == transaction_id
 ]
@@ -38,7 +61,7 @@ if not transaction.empty:
         'HourOfDay'
     ].values[0]
 
-    # Features for prediction
+    # Features
     features = transaction.drop(
         columns=[
             'TransactionID',
@@ -50,7 +73,7 @@ if not transaction.empty:
         errors='ignore'
     )
 
-    # Predict probability
+    # Prediction
     fraud_prob = model.predict_proba(
         features
     )[:,1][0]
@@ -59,7 +82,10 @@ if not transaction.empty:
 
     st.write(f"{fraud_prob:.2%}")
 
-    # Risk Tier
+    # =========================
+    # RISK LEVEL
+    # =========================
+
     if fraud_prob >= 0.75:
         risk = "🔴 Critical Risk"
 
@@ -73,12 +99,17 @@ if not transaction.empty:
 
     st.write(risk)
 
-    # Plain-English Explanation
+    # =========================
+    # EXPLANATION
+    # =========================
+
     st.subheader("Explanation")
 
     explanation = []
 
-    if actual_amt > df['TransactionAmt'].mean():
+    if actual_amt > df[
+        'TransactionAmt'
+    ].mean():
 
         explanation.append(
             "High transaction amount increased fraud suspicion."
@@ -112,10 +143,15 @@ if not transaction.empty:
 
         st.write("- ", exp)
 
-    # SHAP Summary Image
+    # =========================
+    # SHAP IMAGE
+    # =========================
+
     st.subheader("SHAP Global Summary")
 
-    st.image("../shap_summary.png")
+    st.image(
+         "shap_summary.png"
+    )
 
 else:
     st.error("TransactionID not found.")
