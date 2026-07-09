@@ -9,6 +9,19 @@ https://frauddetectionmahakkanwar-puenpugvfjdt4dumuwtckw.streamlit.app/
 
 ---
 
+📂 Dataset Information
+Download from Kaggle:
+https://www.kaggle.com/c/ieee-fraud-detection/data
+Steps to download:
+Create or log in to your free Kaggle account at www.kaggle.com
+Search for “IEEE-CIS Fraud Detection”
+Download:
+train_transaction.csv
+train_identity.csv
+Use both files — they must be merged on TransactionID
+
+---
+
 ## 📌 Project Overview
 
 This project is an AI-powered Fraud Detection System built using Machine Learning techniques to identify fraudulent financial transactions and classify them into different risk categories.
