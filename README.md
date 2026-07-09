@@ -13,11 +13,11 @@ https://frauddetectionmahakkanwar-puenpugvfjdt4dumuwtckw.streamlit.app/
 Download from Kaggle:
 https://www.kaggle.com/c/ieee-fraud-detection/data
 Steps to download:
-Create or log in to your free Kaggle account at www.kaggle.com
-Search for “IEEE-CIS Fraud Detection”
+-Create or log in to your free Kaggle account at www.kaggle.com
+-Search for “IEEE-CIS Fraud Detection”
 Download:
-train_transaction.csv
-train_identity.csv
+-train_transaction.csv
+-train_identity.csv
 Use both files — they must be merged on TransactionID
 
 ---
